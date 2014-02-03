@@ -1,11 +1,33 @@
-[Logo PolyAbs] LA solution de gestion d'absences<br/>
-{% include "login.html" %}
-<br/>
 <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <h3 class="text-muted">Project name</h3>
+        <div class="nav nav-pills pull-right">
+          {% if user.is_authenticated %}
+			Connecté en tant que : [USER] 
+			<a href="./logout"><button type="button" class="btn">(Deconnexion)</button></a>
+		{% else %}
+			Vous n'êtes pas connecté 
+			<a href="./logout"><button type="button" class="btn">Connexion</button></a>
+		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Connexion</h4>
+			  </div>
+			  <form action="/login/" method="POST">{% csrf_token %}
+			  <div class="modal-body">
+				<input type="text" class="form-control" placeholder="Identifiant" id="username" name="username"/> <br/>
+				<input type="password" class="form-control" placeholder="Mot de passe" id="password" name="password"/> 
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+				<button type="submit" class="btn btn-primary">Se Connecter</button>
+			  </div>
+			  </form>  
+			  </div>
+		  </div>
+		</div>	
+		{% endif %}
+
+        </div>
+        <h3 class="text-muted">[Logo PolyAbs] LA solution de gestion d'absences</h3>
       </div>
