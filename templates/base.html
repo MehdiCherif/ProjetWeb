@@ -1,0 +1,14 @@
+<html>
+	<head>
+		<link href="/static/css/bootstrap.css" rel="stylesheet">
+		<script src="/static/js/bootstrap.js"></script>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+		<title>{{title}}</title>
+	</head>
+	<body>
+		{% include "header.html" %}
+		{% block content %}
+			Veuillez vous <a href="#" id="lienCo" data-toggle="modal" data-target="#loginModal">connecter</a>.
+		{% endblock %}
+	</body>
+</html>
