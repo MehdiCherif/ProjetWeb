@@ -1,4 +1,4 @@
-<html>
+<!--<html>
 	<head>
 		<link href="/static/css/bootstrap.min.css" rel="stylesheet">
     
@@ -13,5 +13,43 @@
 			Veuillez vous <a href="#" id="lienCo" data-toggle="modal" data-target="#loginModal">connecter</a>.
 		{% endblock %}
 		{% include "footer.html" %}
+	</body>
+</html>
+-->
+
+
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Projet Web">
+		<meta name="author" content="Mehdi Cherif & Pierre Gauthier">
+		<link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+		<title>PolyAbsences</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="jumbotron-narrow.css" rel="stylesheet">
+	</head>
+
+	<body>
+
+		<div class="container">
+			{% include "header.html" %}
+			{% block content %}
+				Veuillez vous <a href="#" id="lienCo" data-toggle="modal" data-target="#loginModal">connecter</a>.
+			{% endblock %}
+			{% include "footer.html" %}	
+		</div>
+
+
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
 	</body>
 </html>
