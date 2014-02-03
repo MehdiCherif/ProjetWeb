@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'gestionAbsence',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -85,3 +86,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     './static/',
 )
+
+AUTH_PROFILE_MODULE = 'gestionAbsence.Personne'

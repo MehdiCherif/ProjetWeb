@@ -1,6 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class Persone(models.Model):
-    id = models.CharField(primary_key=True)
+class Personne(models.Model):
+    user = models.OneToOneField(User)  
     nom = models.CharField(max_length=30)
     prenom = models.CharField(max_length=30) 

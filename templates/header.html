@@ -1,7 +1,7 @@
 <div class="header">
         <div class="nav nav-pills pull-right">
           {% if user.is_authenticated %}
-			Connecté en tant que : {{request.user.username}}
+			Connecté en tant que : {{ user.username }}
 			<a href="./logout"><button type="button" class="btn">(Deconnexion)</button></a>
 		{% else %}
 			Vous n'êtes pas connecté 
