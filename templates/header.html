@@ -1,11 +1,11 @@
 <div class="header">
         <div class="nav nav-pills pull-right">
           {% if user.is_authenticated %}
-			Connecté en tant que : [USER] 
+			Connecté en tant que : {{request.user.username}}
 			<a href="./logout"><button type="button" class="btn">(Deconnexion)</button></a>
 		{% else %}
 			Vous n'êtes pas connecté 
-			<a href="./logout"><button type="button" class="btn">Connexion</button></a>
+			<a href="#"><button type="button" class="btn" id="lienCo" data-toggle="modal" data-target="#loginModal">Connexion</button></a>
 		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">
 			<div class="modal-content">
@@ -29,5 +29,5 @@
 		{% endif %}
 
         </div>
-        <h3 class="text-muted">[Logo PolyAbs] LA solution de gestion d'absences</h3>
+        <h3 class="text-muted"><img src="/static/images/logo.png" alt="Logo"/> LA solution de gestion d'absences</h3>
       </div>
