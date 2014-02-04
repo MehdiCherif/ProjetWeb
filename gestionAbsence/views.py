@@ -5,7 +5,10 @@ from django.http import HttpResponseRedirect, HttpResponse
 # Create your views here.
 
 def accueil(request):
-	return render(request, 'base.html',{"title":"Accueil de PolyAbs"});
+  if request.user.is_authenticated():
+    return render(request, 'base.html',{"titre":"COOOO Accueil de PolyAbs"});
+  else :
+    return render(request, 'base.html',{"titre":"Accueil de PolyAbs"});
   
 def log_in(request):
 	logout(request)

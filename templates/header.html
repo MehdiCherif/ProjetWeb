@@ -1,12 +1,12 @@
 		<div class="row">
-			<div class="col-md-3"><h3 class="text-muted"><img src="/static/images/logo.png" alt="Logo"/></div>
-			<div class="col-md-3">LA solution de gestion d'absences</h3></div>
+			<div class="col-md-3"><img src="/static/images/logo.png"  class="img-responsive" alt="Logo"/></div>
+			<div class="col-md-4 col-md-offset-1" style="text-align:center"><h4 class="text-muted">LA solution de gestion d'absences</h4></div>
 			{% if user.is_authenticated %}
-			<div class="col-md-4">Connecté en tant que : {{request.user.username}}</div>
-			<div class="col-md-2"><a href="./logout"><button type="button" class="btn">(Deconnexion)</button></a></div>
-		{% else %}
-			<div class="col-md-4">Vous n'êtes pas connecté</div>
-			<div class="col-md-2"><a href="#"><button type="button" class="btn" id="lienCo" data-toggle="modal" data-target="#loginModal">Connexion</button></a></div>
+			<div class="col-md-3 col-md-offset-1"><a href="./logout"><button type="button" class="btn-block btn">{{ user.username }} - Deconnexion</button></a></div>
+    </div><br/>
+      {% else %}
+			<div class="col-md-3 col-md-offset-1"><a href="#" ><button type="button" class="btn btn-block" id="lienCo" data-toggle="modal" data-target="#loginModal">Connexion</button></a></div>
+    </div><br/>
 		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">
 			<div class="modal-content">
@@ -28,7 +28,3 @@
 		  </div>
 		</div>	
 		{% endif %}
-
-        </div>
-        <h3 class="text-muted"><img src="/static/images/logo.png" alt="Logo"/> LA solution de gestion d'absences</h3>
-      </div>
