@@ -1,4 +1,4 @@
 from django.contrib import admin
-from gestionAbsence.models import Personne
+from gestionAbsence.models import Enseignant
 
-admin.site.register(Personne)
+admin.site.register(Enseignant)
