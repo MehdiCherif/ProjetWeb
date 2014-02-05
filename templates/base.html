@@ -22,39 +22,50 @@
 		<div class="container">
 			{% include "header.html" %}
 			{% block content %}
-				<div class="jumbotron">
-					<h1>Jumbotron heading</h1>
-					<p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-					<p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
-				  </div>
+			{% ifequal user.groups.all.0|stringformat:"s" 'Enseignant' %}
+			<div class="jumbotron">
+				<h1>Espace Enseignant</h1>
+				<form class="form-inline" role="form">
+					<input type="text" class="form-control" id="idEtu" placeholder="Identifiant étudiant">
+				  <button type="submit" class="btn btn-success btn-sm">Consulter</button>
+				</form>
+			</div>
+			{% endifequal %}
+			{% ifequal user.groups.all.0|stringformat:"s" 'Etudiant' %}
+			<div class="jumbotron">
+				<h1>Espace Etudiant</h1>
+				<p class="lead">Vous n'avez aucune absence à ce jour.</p>
+			</div>
+			{% endifequal %}
 
-				  <div class="row marketing">
-					<div class="col-lg-6">
-					  <h4>Subheading</h4>
-					  <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+			<div class="row marketing">
+				<div class="col-lg-6">
+					<h4>Enseignants</h4>
+					<p>Vous pouvez visionner les absences de tous les étudiants et entrer les absences à vos cours.</p>
+					<p>Des rappels vous seront envoyés après chacun de vos cours.</p>
 
-					  <h4>Subheading</h4>
-					  <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+					<h4>Etudiants</h4>
+					<p>Vous pouvez consulter vos absences et savoir si elles ont bien été justifiées.</p>
 
-					  <h4>Subheading</h4>
-					  <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-					</div>
-
-					<div class="col-lg-6">
-					  <h4>Subheading</h4>
-					  <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-					  <h4>Subheading</h4>
-					  <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-					  <h4>Subheading</h4>
-					  <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-					</div>
-				  </div>
-
+					<h4>Secrétaires</h4>
+					<p>Vous pouvez entrer les justificatifs concernant les absences des étudiants.</p>
 				</div>
+
+				<div class="col-lg-6">
+					<h4>Enseignants</h4>
+					<p>Vous pouvez visionner les absences de tous les étudiants et entrer les absences à vos cours.</p>
+					<p>Des rappels vous seront envoyés après chacun de vos cours.</p>
+
+					<h4>Etudiants</h4>
+					<p>Vous pouvez consulter vos absences et savoir si elles ont bien été justifiées.</p>
+
+					<h4>Secrétaires</h4>
+					<p>Vous pouvez entrer les justificatifs concernant les absences des étudiants.</p>
+				</div>
+			</div>	
 			{% endblock %}
 			{% include "footer.html" %}	
+			</div>
 		</div>
 
 
