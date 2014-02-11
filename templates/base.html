@@ -23,19 +23,13 @@
 			{% include "header.html" %}
 			{% block content %}
 			{% ifequal user.groups.all.0|stringformat:"s" 'Enseignant' %}
-			<div class="jumbotron">
-				<h1>Espace Enseignant</h1>
-				<form class="form-inline" role="form">
-					<input type="text" class="form-control" id="idEtu" placeholder="Identifiant étudiant">
-				  <button type="submit" class="btn btn-success btn-sm">Consulter</button>
-				</form>
-			</div>
+				{% include "enseignant.html" %}
 			{% endifequal %}
 			{% ifequal user.groups.all.0|stringformat:"s" 'Etudiant' %}
-			<div class="jumbotron">
-				<h1>Espace Etudiant</h1>
-				<p class="lead">Vous n'avez aucune absence à ce jour.</p>
-			</div>
+				{% include "etudiant.html" %}
+			{% endifequal %}
+			{% ifequal user.groups.all.0|stringformat:"s" 'Secretaire' %}
+				{% include "secretaire.html" %}
 			{% endifequal %}
 
 			<div class="row marketing">
