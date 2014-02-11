@@ -17,7 +17,9 @@ def searchEtu(request, nom, prenom):
   
   for etu in etuList :
     page = page + '<tr><td><a href="/info/etu/' + etu.user.id + '">' + etu.user.last_name + " " + etu.user.first_name + "</a></td></tr>"
-    return HttpResponseRedirect(page)
+  
+  page = '</table>'
+  return HttpResponseRedirect(page)
   
   
 def log_in(request):
