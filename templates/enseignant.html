@@ -1,8 +1,20 @@
-<div class="jumbotron">
-	<h1>Espace Enseignant</h1>
-	<form class="form-inline" role="form">
-		<input type="text" class="form-control" id="idEtu" placeholder="Identifiant étudiant">
-	  <button type="submit" class="btn btn-success btn-sm">Consulter</button>
-	</form>
-</div>
+{% extends "base.html" %}
+
+{% block content %}
+	<h3>Espace Enseignant</h3>
+  
+  <div>
+    <table>
+    {% for absence in list_absence %}
+      <tr>
+        <td><a href='../'><button><span class='glyphicon glyphicon-book'></button></a></td>
+        <td>$nbsp;$nbsp;$nbsp;</td>
+        <td> {{ absence.nom }} </td>
+        <td>$nbsp;$nbsp;$nbsp;</td>
+        <td> {{ absence.date }} </td>
+      </tr>
+    {% endfor %}
+    </table>
+  </div>
+{% endblock %}  
 			
