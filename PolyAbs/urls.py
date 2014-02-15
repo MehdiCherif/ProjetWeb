@@ -13,4 +13,6 @@ urlpatterns = patterns('',
     url(r'^logout/', views.log_out),
     url(r'^admin/', include(admin.site.urls)),
 	url(r'^searchEtu/(?P<nom>\w+)/(?P<prenom>\w+)', views.searchEtu),
+	url(r'^getAbsencesEtu/(?P<username>\w+)', views.getAbsencesEtu),
+	url(r'^getEtu/', views.getEtu),
 )

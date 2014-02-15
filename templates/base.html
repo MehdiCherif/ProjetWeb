@@ -22,15 +22,17 @@
 		<div class="container">
 			{% include "header.html" %}
 			{% block content %}
-			{% ifequal user.groups.all.0|stringformat:"s" 'Enseignant' %}
-				{% include "enseignant.html" %}
-			{% endifequal %}
-			{% ifequal user.groups.all.0|stringformat:"s" 'Etudiant' %}
-				{% include "etudiant.html" %}
-			{% endifequal %}
-			{% ifequal user.groups.all.0|stringformat:"s" 'Secretaire' %}
-				{% include "secretaire.html" %}
-			{% endifequal %}
+			<div class="jumbotron">
+				{% ifequal user.groups.all.0|stringformat:"s" 'Enseignant' %}
+					{% include "enseignant.html" %}
+				{% endifequal %}
+				{% ifequal user.groups.all.0|stringformat:"s" 'Etudiant' %}
+					{% include "etudiant.html" %}
+				{% endifequal %}
+				{% ifequal user.groups.all.0|stringformat:"s" 'Secretaire' %}
+					{% include "secretaire.html" %}
+				{% endifequal %}
+			</div>
 
 			<div class="row marketing">
 				<div class="col-lg-6">

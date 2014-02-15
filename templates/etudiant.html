@@ -1,15 +1,20 @@
-<div class="jumbotron">
 	<h1>Espace Etudiant</h1>
 	<script>
-	window.onload = function(){
-	$.get("/searchEtu/toto/tata", function(data)
+	window.onload = function()
+	{
+		$.get("../getAbsencesEtu/{{ user.first_name }}", function(data)
 		{
-			alert('a');
-			document.getElementById('result').innerHTML=data;
+			alert('b');
+			if (data.length > 0) 
+			{
+				list = "<table>";
+				list += data;
+				list += "</table>";
+				document.getElementById('absences').innerHTML = list;
+			}
 		});
 	};
 	</script>
 	<div id="result">
 	</div>
-	<p class="lead">Vous n'avez aucune absence à ce jour.</p>
-</div>
+	<p class="lead" id="absences">Vous n'avez aucune absence à ce jour.</p>

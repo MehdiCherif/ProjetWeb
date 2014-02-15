@@ -1,7 +1,17 @@
+<script>
+	window.onload = function()
+	{
+		$('#nameEtu').keyup(function() 
+		{ 
+		    alert($(this).val()); // get the current value of the input field.
+		});
+	};
+</script>
 <div class="jumbotron">
 	<h1>Espace Enseignant</h1>
-	<form class="form-inline" role="form">
-		<input type="text" class="form-control" id="idEtu" placeholder="Identifiant étudiant">
+	<form action="/getEtu/" methode="POST" class="form-inline" role="form">
+		<input type="text" class="form-control" id="lastName" placeholder="Nom">
+		<input type="text" class="form-control" id="firstName" placeholder="Prénom">
 	  <button type="submit" class="btn btn-success btn-sm">Consulter</button>
 	</form>
 </div>
