@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^login/', views.log_in),
     url(r'^logout/', views.log_out),
     url(r'^admin/', include(admin.site.urls)),
-	url(r'^searchEtu/(?P<nom>\w+)/(?P<prenom>\w+)', views.searchEtu),
+    url(r'^cours/(?P<cours_id>\d+)', views.cours),
+	  url(r'^searchEtu/(?P<nom>\w+)', views.searchEtu),
 )
