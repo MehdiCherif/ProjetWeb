@@ -1,11 +1,11 @@
 		<div class="row">
-			<div class="col-md-3"><img src="/static/images/logo.png"  class="img-responsive" alt="Logo"/></div>
-			<div class="col-md-4 col-md-offset-1" style="text-align:center"><h4 class="text-muted">LA solution de gestion d'absences</h4></div>
+			<div class="col-md-3 col-xs-6"><img src="/static/images/logo.png"  class="img-responsive" alt="Logo"/></div>
+			<div class="col-md-4 col-md-offset-1 col-xs-6" style="text-align:center"><h4 class="text-muted">LA solution de gestion d'absences</h4></div>
 			{% if user.is_authenticated %}
-			<div class="col-md-3 col-md-offset-1"><a href="/logout"><button type="button" class="btn-block btn">{{ user.username }} - Deconnexion</button></a></div>
+			<div class="col-md-3 col-md-offset-1 col-xs-6"><a href="/logout"><button type="button" class="btn-block btn">{{ user.username }} - Deconnexion</button></a></div>
     </div><br/>
       {% else %}
-			<div class="col-md-3 col-md-offset-1"><a href="#" ><button type="button" class="btn btn-block" id="lienCo" data-toggle="modal" data-target="#loginModal">Connexion</button></a></div>
+			<div class="col-md-3 col-md-offset-1 col-xs-6"><a id="lienCo"><button type="button" class="btn btn-block">Connexion</button></a></div>
     </div><br/>
 		<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">
@@ -16,7 +16,7 @@
 			  </div>
 			  <form action="/login/" method="POST">{% csrf_token %}
 			  <div class="modal-body">
-				<input type="text" class="form-control" placeholder="Identifiant" id="username" name="username"/> <br/>
+				<input type="text" class="form-control" placeholder="Identifiant" id="username123" name="username"/> <br/>
 				<input type="password" class="form-control" placeholder="Mot de passe" id="password" name="password"/> 
 			  </div>
 			  <div class="modal-footer">
@@ -28,3 +28,9 @@
 		  </div>
 		</div>	
 		{% endif %}
+		
+		<script>
+			$('#lienCo').on('click', function() {
+				$('#loginModal').modal('toggle');	
+			});
+		</script>

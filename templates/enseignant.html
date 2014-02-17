@@ -4,10 +4,10 @@
 	<h3>Espace Enseignant</h3>
   
   <div>
-    <table style='text-align: left;'>
+    <table style='text-align: left;' style="border: 10px;">
     {% for cours in list_cours %}
       <tr>
-        <td><a href='../cours/{{ cours.id }}'><button><span class='glyphicon glyphicon-book'></button></a></td>
+        <td><a href='../cours/{{ cours.id }}'><button class='btn glyphicon glyphicon-book'></button></a></td>
         <td>   </td>
         <td> {{ cours.nom }} </td>
         <td>   </td>

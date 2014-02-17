@@ -11,7 +11,9 @@
   <form action='/genererAbsence' method='POST'>{% csrf_token %}<h4 id='titreListe'></h4>
 	<input type='hidden' name='cours' value='{{ cours.id }}'/>
   <table id='list_etu' style='text-align: left;'>
-  </table></form>
+  </table>
+	<div id='submit_button'></div>
+	</form>
   
   <script>
     listActivated = 0;
@@ -24,9 +26,11 @@
       searchInput = document.getElementById('searchInput').value = '';
       if(listActivated == 0)
       {
-        listAtivated = 1;
+        listAtivated = 1;				
         document.getElementById('titreListe').innerHTML = 
-          "<em>Liste des étudiants absents - </em><button class='btn btn-primary' type='submit'>Valider</button>";
+          "<em>Liste des étudiants absents - </em>";
+				document.getElementById('submit_button').innerHTML = 
+					"<button class='btn btn-primary' type='submit'>Valider</button>";
       }
       liste_etu = document.getElementById('list_etu').innerHTML;
       document.getElementById('list_etu').innerHTML = 

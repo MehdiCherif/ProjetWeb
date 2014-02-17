@@ -18,7 +18,7 @@ def accueil(request):
       groupe = 'undefined'
       
     if groupe == 'Enseignant':
-      list_cours = Cours.objects.all()
+      list_cours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=True)
       return render(request, 'enseignant.html',{"titre":"Accueil de PolyAbs", 'list_cours':list_cours})
     elif groupe == 'Etudiant':
       return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs"})
@@ -52,6 +52,8 @@ def genererAbsence(request):
 		coursId = request.POST.get('cours', 'non')
 		etuId = request.POST.get('etudiant'+str(i), 'none')
 		cours = Cours.objects.get(id=coursId)
+		cours.justifie = True
+		cours.save()
 		while (etuId != 'none'):
 			print etuId
 			etudiant = Etudiant.objects.get(id=etuId)
