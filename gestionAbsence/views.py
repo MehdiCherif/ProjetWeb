@@ -12,8 +12,10 @@ from django.utils import formats
 def accueil(request):
   if request.user.is_authenticated():
     groupe = request.user.groups.all()
-    if groupe[0]:
+    if len(groupe) and groupe[0]:
       groupe = groupe[0].name
+    else:
+      groupe = 'undefined'
       
     if groupe == 'Enseignant':
       list_cours = Cours.objects.all()
@@ -22,7 +24,8 @@ def accueil(request):
       return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs"})
     elif groupe == 'Secretaire':
       return render(request, 'secretaire.html',{"titre":"Accueil de PolyAbs"})
-      
+    else:
+      return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
   else :
     return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
 
