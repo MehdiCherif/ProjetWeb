@@ -37,18 +37,29 @@ def searchEtu(request, nom):
   if len(etuList) > 0 :
     page = '<div class="dropdown open"><ul class="dropdown-menu">' 
     for etu in etuList:
-      page = page + '<li><a href="#" onclick="addEtu(\''+etu.user.last_name+'\',\''+etu.user.first_name+'\',\''+str(etu.user.id)+'\')">' + etu.user.last_name + " " + etu.user.first_name + "</a></li>" 
+      page = page + '<li><a href="#" onclick="addEtu(\''+etu.user.last_name+'\',\''+etu.user.first_name+'\',\''+str(etu.id)+'\')">' + etu.user.last_name + " " + etu.user.first_name + "</a></li>" 
     page = page + '</ul></div>'
   else:
     page = ''
   return HttpResponse(page)
+	
+def genererAbsence(request):
+	i = 1
+	if request.POST:
+		coursId = request.POST.get('cours', 'non')
+		etuId = request.POST.get('etudiant'+str(i), 'none')
+		cours = Cours.objects.get(id=coursId)
+		while (etuId != 'none'):
+			print etuId
+			etudiant = Etudiant.objects.get(id=etuId)
+			a = Absence(cours=cours, etudiant=etudiant)
+			a.save()
+			print 'saved'
+			i = i+1
+			etuId = request.POST.get('etudiant'+str(i), 'none')
+			
+	return accueil(request) 
   
-def getAbsencesEtu(request, username):
-	absences = Absences.objets.all().filter(id = username)
-	page = "azerty"
-	for abs in absences:
-		page += "<tr><td>"+abs.date+"</td><td>"+abs.cours+"</td><td>"+abs.justif+"</td>"
-	return HttpResponse(page)
   
 def log_in(request):
 	logout(request)
@@ -66,17 +77,5 @@ def log_out(request):
 	logout(request)
 	return HttpResponseRedirect('/')
 
-def getEtu(request):
-	firstName = request.POST.get('firstName','none')
-	lastName = request.POST.get('lastName','none')
-	print firstName
-	print lastName
-	print "AVANT"
-	etuList = Etudiant.objects.all().filter(user__last_name = lastName, user__first_name = firstName)
-	print "APRES"
-	print etuList.count()
-	result = "Aucun etudiant trouve"
-	for e in etuList:
-		result = e.user.username
-	return HttpResponse(result)
+
 
