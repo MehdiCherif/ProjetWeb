@@ -12,7 +12,7 @@ from django.utils import formats
 def accueil(request):
   if request.user.is_authenticated():
     groupe = request.user.groups.all()
-    if len(groupe) and groupe[0]:
+    if len(groupe) > 0:
       groupe = groupe[0].name
     else:
       groupe = 'undefined'
@@ -40,7 +40,7 @@ def searchEtu(request, nom):
   if len(etuList) > 0 :
     page = '<div class="dropdown open"><ul class="dropdown-menu">' 
     for etu in etuList:
-      page = page + '<li><a href="#" onclick="addEtu(\''+etu.user.last_name+'\',\''+etu.user.first_name+'\',\''+str(etu.id)+'\')">' + etu.user.last_name + " " + etu.user.first_name + "</a></li>" 
+      page = page + '<li><a href="#" onclick="addEtu(\''+etu.user.last_name+'\',\''+etu.user.first_name+'\',\''+etu.user.username+'\')">' + etu.user.last_name + " " + etu.user.first_name + "</a></li>" 
     page = page + '</ul></div>'
   else:
     page = ''
@@ -65,23 +65,55 @@ def genererAbsence(request):
 			
 	return accueil(request) 
   
-def getAbsencesEtu(request, id):
-	absences = Absence.objects.all().filter(etudiant__user__username = id)
+def getAbsencesEtu(request, username):
+	groupe = request.user.groups.all()
 	page = ""
-	if (len(absences) > 0):
-		page += u"<tr><td><b>Date</b></td><td><b>Matière</b></td><td><b>Enseignant</b></td><td><b>Justification</b></td></tr>"
-	else:
-		page += u"<p class='lead'>Vous n'avez aucune absence à ce jour.</p>"
-	for abs in absences:
-		dateAbs = abs.cours.date
-		dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
-		page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
-		justif = Justificatif.objects.all().filter(absence = abs)
-		if (len(justif) > 0):
-			page += "<td>Justifiee</td>"
+	if len(groupe) > 0:
+		groupe = groupe[0].name
+	if groupe == "Etudiant":
+		absences = Absence.objects.all().filter(etudiant__user__username = username)
+		if (len(absences) > 0):
+			page += u"<tr><td><b>Date</b></td><td><b>Matière</b></td><td><b>Enseignant</b></td><td><b>Justification</b></td></tr>"
 		else:
-			page += "<td>Non justifee</td>"
+			page += u"<p class='lead'>Vous n'avez aucune absence à ce jour.</p>"
+		for abs in absences:
+			dateAbs = abs.cours.date
+			dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
+			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
+			justif = Justificatif.objects.all().filter(absence = abs)
+			if (len(justif) > 0):
+				page += "<td><span class='glyphicon glyphicon-ok-sign'></span></td>"
+			else:
+				page += "<td><span class='glyphicon glyphicon-remove-sign'></span></td>"
+	elif groupe == "Secretaire":
+		absences = Absence.objects.all().filter(etudiant__user__username = username)
+		if (len(absences) > 0):
+			page += u"<tr><td><b>Date</b></td><td><b>Matière</b></td><td><b>Enseignant</b></td><td><b>Justification</b></td></tr>"
+		else:
+			page += u"<p class='lead'>Aucune absence à ce jour.</p>"
+		for abs in absences:
+			dateAbs = abs.cours.date
+			dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
+			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
+			justif = Justificatif.objects.all().filter(absence = abs)
+			if (len(justif) > 0):
+				page += "<td><span class='glyphicon glyphicon-ok-sign'></span></td>"
+			else:
+				page += "<td><a onclick='openJustif("+str(abs.id)+")'><button type='button' class='btn btn-block' id='openJustif'><span class='glyphicon glyphicon-pencil'></span></button></a></td>"
 	return HttpResponse(page)
+
+def justification(request):
+	if request.POST and request.user.groups.all()[0].name == "Secretaire":
+		print "AVANT"
+		idAbs = request.POST.get('idAbs', 'none')
+		abs = Absence.objects.get(pk=idAbs)
+		secr = Secretaire.objects.all().filter(user__username = request.user.username)[0]
+		descr = request.POST.get('justif', 'none')
+		justi = Justificatif(absence = abs, secretaire = secr, description = descr)
+		justi.save()
+		print "APRES"
+		
+	return HttpResponseRedirect('/')
   
 def log_in(request):
 	logout(request)
@@ -99,5 +131,16 @@ def log_out(request):
 	logout(request)
 	return HttpResponseRedirect('/')
 
-
-
+def getEtu(request):
+	firstName = request.POST.get('firstName','none')
+	lastName = request.POST.get('lastName','none')
+	print firstName
+	print lastName
+	print "AVANT"
+	etuList = Etudiant.objects.all().filter(user__last_name = lastName, user__first_name = firstName)
+	print "APRES"
+	print etuList.count()
+	result = "Aucun etudiant trouve"
+	for e in etuList:
+		result = e.user.username
+	return HttpResponse(result)

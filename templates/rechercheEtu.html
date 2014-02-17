@@ -5,7 +5,7 @@
 	function suggestion()
     {
       searchInput = document.getElementById('searchInput').value;
-      $.get( "../searchEtu/"+searchInput, 
+      $.get( "/searchEtu/"+searchInput, 
         function( data ) 
         {
           document.getElementById('suggestion').innerHTML = data;
