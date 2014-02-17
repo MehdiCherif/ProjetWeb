@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-	<h1>Espace Etudiant</h1>
-	<script>
-	window.onload = function()
-	{
-		$.get("../getAbsencesEtu/{{ user.first_name }}", function(data)
-		{
-			alert('b');
-			if (data.length > 0) 
-			{
-				list = "<table>";
-				list += data;
-				list += "</table>";
-				document.getElementById('absences').innerHTML = list;
-			}
-		});
-	};
-	</script>
-	<div id="result">
-	</div>
-	<p class="lead" id="absences">Vous n'avez aucune absence à ce jour.</p>
-=======
-
 {% extends "base.html" %}
 
 {% block content %}
@@ -40,4 +17,3 @@
   	<p class="lead">Vous n'avez aucune absence à ce jour.</p>
   </div>
 {% endblock %}  
->>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca

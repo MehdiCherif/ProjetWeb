@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-<script>
-	window.onload = function()
-	{
-		$('#nameEtu').keyup(function() 
-		{ 
-		    alert($(this).val()); // get the current value of the input field.
-		});
-	};
-</script>
-<div class="jumbotron">
-	<h1>Espace Enseignant</h1>
-	<form action="/getEtu/" method="POST">{% csrf_token %}
-		<input type="text" class="form-control" id="lastName" name="lastName" placeholder="Nom">
-		<input type="text" class="form-control" id="firstName" name="firstName" placeholder="Prénom">
-	  <button type="submit" class="btn btn-success btn-sm">Consulter</button>
-	</form>
-</div>
-=======
 {% extends "base.html" %}
 
 {% block content %}
@@ -36,5 +17,3 @@
     </table>
   </div>
 {% endblock %}  
->>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca
-			

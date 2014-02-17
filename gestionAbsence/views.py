@@ -2,27 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from gestionAbsence.models import *
-<<<<<<< HEAD
-=======
 from django.db.models import Q
->>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca
 
 # Create your views here.
 
 def accueil(request):
   if request.user.is_authenticated():
-<<<<<<< HEAD
-    return render(request, 'base.html',{"titre":"COOOO Accueil de PolyAbs"})
-  else :
-    return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
-
-def searchEtu(request, nom, prenom):
-  etuList = Etudiants.objects.all().filter(user__last_name = nom, user__first_name = prenom)
-  page = '<table>'
-  for etu in etuList :
-    page = page + '<tr><td><a href="/info/etu/' + etu.user.id + '">' + etu.user.last_name + " " + etu.user.first_name + "</a></td></tr>"
-  page = '</table>'
-=======
     groupe = request.user.groups.all()
     if groupe[0]:
       groupe = groupe[0].name
@@ -53,7 +38,6 @@ def searchEtu(request, nom):
     page = page + '</ul></div>'
   else:
     page = ''
->>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca
   return HttpResponse(page)
   
 def getAbsencesEtu(request, username):

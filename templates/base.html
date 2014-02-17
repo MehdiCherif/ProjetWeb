@@ -23,23 +23,9 @@
 			{% include "header.html" %}
       <div class="jumbotron">
 			{% block content %}
-<<<<<<< HEAD
-			<div class="jumbotron">
-				{% ifequal user.groups.all.0|stringformat:"s" 'Enseignant' %}
-					{% include "enseignant.html" %}
-				{% endifequal %}
-				{% ifequal user.groups.all.0|stringformat:"s" 'Etudiant' %}
-					{% include "etudiant.html" %}
-				{% endifequal %}
-				{% ifequal user.groups.all.0|stringformat:"s" 'Secretaire' %}
-					{% include "secretaire.html" %}
-				{% endifequal %}
-			</div>
-=======
             bla bla par defaut
 			{% endblock %}
       </div>
->>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca
 
 			<div class="row marketing">
 				<div class="col-lg-6">
