@@ -8,38 +8,37 @@
   {% include "rechercheEtu.html" %}
   
   <br/><br/>
-  <form action='/genererAbsence' method='POST'>{% csrf_token %}<h4 id='titreListe'></h4>
-	<input type='hidden' name='cours' value='{{ cours.id }}'/>
+  <form>{% csrf_token %}<h4 id='titreListe'></h4>
   <table id='list_etu' style='text-align: left;'>
   </table></form>
   
   <script>
     listActivated = 0;
-    nb_etu = 0;
   
-    function addEtu(nom, prenom ,id)
+    function addEtu(nom, prenom ,username)
     {
-			nb_etu++;
       document.getElementById('suggestion').innerHTML = '';
       searchInput = document.getElementById('searchInput').value = '';
       if(listActivated == 0)
       {
         listAtivated = 1;
         document.getElementById('titreListe').innerHTML = 
-          "<em>Liste des étudiants absents - </em><button class='btn btn-primary' type='submit'>Valider</button>";
+          "<em>Liste des étudiants absents - </em><button class='btn' type='submit'>Valider</button>";
       }
       liste_etu = document.getElementById('list_etu').innerHTML;
       document.getElementById('list_etu').innerHTML = 
-        liste_etu + "<tr id="+id+"><td>"+prenom+"</td><td>   </td><td>"+nom+"</td>"
-          + "<td><input type='hidden' name='etudiant"+nb_etu+"' value='"+id+"'></td><td>   </td>"
-          + "<td><button class='glyphicon glyphicon-remove btn' onclick='removeEtu("+id+")'/></td>";
-  	}
+        liste_etu + "<tr id="+username+"><td>"+prenom+"</td><td>   </td><td>"+nom+"</td>"
+          + "<td><input type='hidden' value='"+username+"'></td><td>   </td>"
+          + "<td><button class='glyphicon glyphicon-remove btn' onclick='removeEtu("+username+")'/></td>";
+    }
     
-    function removeEtu(id)
+    function removeEtu(username)
     {
-      element = document.getElementById(id);
+      element = document.getElementById(username);
       document.getElementById('list_etu').deleteRow(element.rowIndex);
     }
+    
+    
     
   </script>
 {% endblock %}
