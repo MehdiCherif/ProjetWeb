@@ -20,3 +20,17 @@ class Annee(models.Model):
 class Etudiant(models.Model):
     user = models.OneToOneField(User)  
     annee = models.ForeignKey(Annee) 
+    
+class Cours(models.Model):
+    nom = models.CharField(max_length=20)
+    date = models.DateTimeField()
+    
+class Absence(models.Model):
+    cours = models.ForeignKey(Cours)
+    etudiant = models.ForeignKey(Etudiant)
+    enseignant = models.ForeignKey(Enseignant)
+        
+class Justificatif(models.Model):
+    absence = models.ForeignKey(Absence)
+    secretaire = models.ForeignKey(Secretaire)
+    description = models.CharField(max_length=1000)

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 	<h1>Espace Etudiant</h1>
 	<script>
 	window.onload = function()
@@ -18,3 +19,25 @@
 	<div id="result">
 	</div>
 	<p class="lead" id="absences">Vous n'avez aucune absence à ce jour.</p>
+=======
+
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="jumbotron">
+  	<h1>Espace Etudiant</h1>
+  	<script>
+  	window.onload = function(){
+  	$.get("/searchEtu/toto/tata", function(data)
+  		{
+  			alert('a');
+  			document.getElementById('result').innerHTML=data;
+  		});
+  	};
+  	</script>
+  	<div id="result">
+  	</div>
+  	<p class="lead">Vous n'avez aucune absence à ce jour.</p>
+  </div>
+{% endblock %}  
+>>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca

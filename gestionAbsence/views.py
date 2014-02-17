@@ -2,11 +2,16 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from gestionAbsence.models import *
+<<<<<<< HEAD
+=======
+from django.db.models import Q
+>>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca
 
 # Create your views here.
 
 def accueil(request):
   if request.user.is_authenticated():
+<<<<<<< HEAD
     return render(request, 'base.html',{"titre":"COOOO Accueil de PolyAbs"})
   else :
     return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
@@ -17,6 +22,38 @@ def searchEtu(request, nom, prenom):
   for etu in etuList :
     page = page + '<tr><td><a href="/info/etu/' + etu.user.id + '">' + etu.user.last_name + " " + etu.user.first_name + "</a></td></tr>"
   page = '</table>'
+=======
+    groupe = request.user.groups.all()
+    if groupe[0]:
+      groupe = groupe[0].name
+      
+    if groupe == 'Enseignant':
+      list_cours = Cours.objects.all()
+      return render(request, 'enseignant.html',{"titre":"Accueil de PolyAbs", 'list_cours':list_cours})
+    elif groupe == 'Etudiant':
+      return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs"})
+    elif groupe == 'Secretaire':
+      return render(request, 'secretaire.html',{"titre":"Accueil de PolyAbs"})
+      
+  else :
+    return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
+
+def cours(request, cours_id):
+  cours = Cours.objects.get(pk=cours_id)
+  return render(request, 'enseignant_cours.html',{"titre":"Accueil de PolyAbs", 'cours':cours})
+
+def searchEtu(request, nom):
+  etuList = Etudiant.objects.all().filter(
+    Q(user__last_name__contains=nom) | Q(user__first_name__contains=nom)
+  )
+  if len(etuList) > 0 :
+    page = '<div class="dropdown open"><ul class="dropdown-menu">' 
+    for etu in etuList:
+      page = page + '<li><a href="#" onclick="addEtu(\''+etu.user.last_name+'\',\''+etu.user.first_name+'\',\''+str(etu.user.id)+'\')">' + etu.user.last_name + " " + etu.user.first_name + "</a></li>" 
+    page = page + '</ul></div>'
+  else:
+    page = ''
+>>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca
   return HttpResponse(page)
   
 def getAbsencesEtu(request, username):

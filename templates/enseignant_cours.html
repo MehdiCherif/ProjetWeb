@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h3>Espace Enseignant - {{ cours.nom }} ({{ cours.date }})</h3>
+  
+  <br/>
+  
+  <input type="text" class="form-control" id="searchInput" placeholder="Identifiant étudiant" onkeyup="suggestion()">
+  <div id='suggestion'></div>
+  
+  <br/><br/>
+  <form>{% csrf_token %}<h4 id='titreListe'></h4>
+  <table id='list_etu' style='text-align: left;'>
+  </table></form>
+  
+  <script>
+    listActivated = 0;
+  
+    function addEtu(nom, prenom ,id)
+    {
+      document.getElementById('suggestion').innerHTML = '';
+      searchInput = document.getElementById('searchInput').value = '';
+      if(listActivated == 0)
+      {
+        listAtivated = 1;
+        document.getElementById('titreListe').innerHTML = 
+          "<em>Liste des étudiants absents - </em><button class='btn' type='submit'>Valider</button>";
+      }
+      liste_etu = document.getElementById('list_etu').innerHTML;
+      document.getElementById('list_etu').innerHTML = 
+        liste_etu + "<tr id="+id+"><td>"+prenom+"</td><td>   </td><td>"+nom+"</td>"
+          + "<td><input type='hidden' value='"+id+"'></td><td>   </td>"
+          + "<td><button class='glyphicon glyphicon-remove btn' onclick='removeEtu("+id+")'/></td>";
+    }
+    
+    function removeEtu(id)
+    {
+      element = document.getElementById(id);
+      document.getElementById('list_etu').deleteRow(element.rowIndex);
+    }
+    
+    function suggestion()
+    {
+      searchInput = document.getElementById('searchInput').value;
+      $.get( "../searchEtu/"+searchInput, 
+        function( data ) 
+        {
+          document.getElementById('suggestion').innerHTML = data;
+        });
+    }
+    
+  </script>
+{% endblock %}

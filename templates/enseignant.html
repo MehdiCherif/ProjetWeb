@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <script>
 	window.onload = function()
 	{
@@ -15,4 +16,25 @@
 	  <button type="submit" class="btn btn-success btn-sm">Consulter</button>
 	</form>
 </div>
+=======
+{% extends "base.html" %}
+
+{% block content %}
+	<h3>Espace Enseignant</h3>
+  
+  <div>
+    <table style='text-align: left;'>
+    {% for cours in list_cours %}
+      <tr>
+        <td><a href='../cours/{{ cours.id }}'><button><span class='glyphicon glyphicon-book'></button></a></td>
+        <td>   </td>
+        <td> {{ cours.nom }} </td>
+        <td>   </td>
+        <td> {{ cours.date }} </td>
+      </tr>
+    {% endfor %}
+    </table>
+  </div>
+{% endblock %}  
+>>>>>>> d8ded672ff05eb9884205fb7b3da4448fc94d9ca
 			
