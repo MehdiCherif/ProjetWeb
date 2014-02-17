@@ -1,19 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="jumbotron">
   	<h1>Espace Etudiant</h1>
   	<script>
   	window.onload = function(){
-  	$.get("/searchEtu/toto/tata", function(data)
+  	$.get("../getAbsencesEtu/{{user.username}}", function(data)
   		{
-  			alert('a');
-  			document.getElementById('result').innerHTML=data;
+			document.getElementById('result').innerHTML=data;
   		});
   	};
   	</script>
-  	<div id="result">
-  	</div>
-  	<p class="lead">Vous n'avez aucune absence à ce jour.</p>
-  </div>
+	<table id="result" class="table">
+	</table>
 {% endblock %}  

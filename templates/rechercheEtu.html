@@ -1,0 +1,14 @@
+<input type="text" class="form-control" id="searchInput" placeholder="Prénom ou Nom de l'étudiant" onkeyup="suggestion()">
+  <div id='suggestion'></div>
+  
+<script>
+	function suggestion()
+    {
+      searchInput = document.getElementById('searchInput').value;
+      $.get( "../searchEtu/"+searchInput, 
+        function( data ) 
+        {
+          document.getElementById('suggestion').innerHTML = data;
+        });
+    }
+</script>

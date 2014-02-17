@@ -1,8 +1,11 @@
+#-*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from gestionAbsence.models import *
 from django.db.models import Q
+from datetime import datetime
+from django.utils import formats
 
 # Create your views here.
 
@@ -60,6 +63,23 @@ def genererAbsence(request):
 			
 	return accueil(request) 
   
+def getAbsencesEtu(request, id):
+	absences = Absence.objects.all().filter(etudiant__user__username = id)
+	page = ""
+	if (len(absences) > 0):
+		page += u"<tr><td><b>Date</b></td><td><b>Matière</b></td><td><b>Enseignant</b></td><td><b>Justification</b></td></tr>"
+	else:
+		page += u"<p class='lead'>Vous n'avez aucune absence à ce jour.</p>"
+	for abs in absences:
+		dateAbs = abs.cours.date
+		dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
+		page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
+		justif = Justificatif.objects.all().filter(absence = abs)
+		if (len(justif) > 0):
+			page += "<td>Justifiee</td>"
+		else:
+			page += "<td>Non justifee</td>"
+	return HttpResponse(page)
   
 def log_in(request):
 	logout(request)
