@@ -24,11 +24,11 @@ class Etudiant(models.Model):
 class Cours(models.Model):
     nom = models.CharField(max_length=20)
     date = models.DateTimeField()
+    enseignant = models.ForeignKey(Enseignant)
     
 class Absence(models.Model):
     cours = models.ForeignKey(Cours)
     etudiant = models.ForeignKey(Etudiant)
-    enseignant = models.ForeignKey(Enseignant)
         
 class Justificatif(models.Model):
     absence = models.ForeignKey(Absence)
