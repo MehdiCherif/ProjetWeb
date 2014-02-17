@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^cours/(?P<cours_id>\d+)', views.cours),
 	url(r'^searchEtu/(?P<nom>\w+)', views.searchEtu),
+	url(r'^getAbsencesEtu/(?P<id>\w+)', views.getAbsencesEtu),
 )

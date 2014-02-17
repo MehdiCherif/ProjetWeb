@@ -5,8 +5,7 @@
   
   <br/>
   
-  <input type="text" class="form-control" id="searchInput" placeholder="Identifiant étudiant" onkeyup="suggestion()">
-  <div id='suggestion'></div>
+  {% include "rechercheEtu.html" %}
   
   <br/><br/>
   <form>{% csrf_token %}<h4 id='titreListe'></h4>
@@ -39,15 +38,7 @@
       document.getElementById('list_etu').deleteRow(element.rowIndex);
     }
     
-    function suggestion()
-    {
-      searchInput = document.getElementById('searchInput').value;
-      $.get( "../searchEtu/"+searchInput, 
-        function( data ) 
-        {
-          document.getElementById('suggestion').innerHTML = data;
-        });
-    }
+    
     
   </script>
 {% endblock %}

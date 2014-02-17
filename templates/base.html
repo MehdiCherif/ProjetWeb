@@ -6,55 +6,47 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="Projet Web">
 		<meta name="author" content="Mehdi Cherif & Pierre Gauthier">
-		
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
 		<link href="/static/css/jumbotron-narrow.css" rel="stylesheet">
-    
-    <script src="/static/js/jquery.js"></script>
-    <script src="/static/js/bootstrap.js"></script>
-
+    	<script src="/static/js/jquery.js"></script>
+    	<script src="/static/js/bootstrap.js"></script>
 		<title>{{ titre }}</title>
-
 	</head>
-
 	<body>
 
 		<div class="container">
 			{% include "header.html" %}
-      <div class="jumbotron">
+    	<div class="jumbotron">
 			{% block content %}
-            bla bla par defaut
+            Bienvenue sur le site PolyAbsences,<br/>Veuillez vous connecter.
 			{% endblock %}
-      </div>
+     	</div>
 
-			<div class="row marketing">
-				<div class="col-lg-6">
-					<h4>Enseignants</h4>
-					<p>Vous pouvez visionner les absences de tous les étudiants et entrer les absences à vos cours.</p>
-					<p>Des rappels vous seront envoyés après chacun de vos cours.</p>
+		<div class="row marketing">
+			<div class="col-lg-6">
+				<h4>Enseignants</h4>
+				<p>Vous pouvez visionner les absences de tous les étudiants et entrer les absences à vos cours.</p>
+				<p>Des rappels vous seront envoyés après chacun de vos cours.</p>
 
-					<h4>Etudiants</h4>
-					<p>Vous pouvez consulter vos absences et savoir si elles ont bien été justifiées.</p>
+				<h4>Etudiants</h4>
+				<p>Vous pouvez consulter vos absences et savoir si elles ont bien été justifiées.</p>
 
-					<h4>Secrétaires</h4>
-					<p>Vous pouvez entrer les justificatifs concernant les absences des étudiants.</p>
-				</div>
+				<h4>Secrétaires</h4>
+				<p>Vous pouvez entrer les justificatifs concernant les absences des étudiants.</p>
+			</div>
 
-				<div class="col-lg-6">
-					<h4>Enseignants</h4>
-					<p>Vous pouvez visionner les absences de tous les étudiants et entrer les absences à vos cours.</p>
-					<p>Des rappels vous seront envoyés après chacun de vos cours.</p>
+			<div class="col-lg-6">
+				<h4>Enseignants</h4>
+				<p>Vous pouvez visionner les absences de tous les étudiants et entrer les absences à vos cours.</p>
+				<p>Des rappels vous seront envoyés après chacun de vos cours.</p>
 
-					<h4>Etudiants</h4>
-					<p>Vous pouvez consulter vos absences et savoir si elles ont bien été justifiées.</p>
+				<h4>Etudiants</h4>
+				<p>Vous pouvez consulter vos absences et savoir si elles ont bien été justifiées.</p>
 
-					<h4>Secrétaires</h4>
-					<p>Vous pouvez entrer les justificatifs concernant les absences des étudiants.</p>
-				</div>
-			</div>	
-      
+				<h4>Secrétaires</h4>
+				<p>Vous pouvez entrer les justificatifs concernant les absences des étudiants.</p>
+		</div>
 			{% include "footer.html" %}	
 		</div>
-
 	</body>
 </html>
