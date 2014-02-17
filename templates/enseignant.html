@@ -9,9 +9,9 @@
 </script>
 <div class="jumbotron">
 	<h1>Espace Enseignant</h1>
-	<form action="/getEtu/" methode="POST" class="form-inline" role="form">
-		<input type="text" class="form-control" id="lastName" placeholder="Nom">
-		<input type="text" class="form-control" id="firstName" placeholder="Prénom">
+	<form action="/getEtu/" method="POST">{% csrf_token %}
+		<input type="text" class="form-control" id="lastName" name="lastName" placeholder="Nom">
+		<input type="text" class="form-control" id="firstName" name="firstName" placeholder="Prénom">
 	  <button type="submit" class="btn btn-success btn-sm">Consulter</button>
 	</form>
 </div>

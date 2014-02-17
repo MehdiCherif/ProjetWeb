@@ -43,7 +43,16 @@ def log_out(request):
 	return HttpResponseRedirect('/')
 
 def getEtu(request):
-	etu = Etudiant.objects.all().filter(user__last_name=request.POST.get('lastName','non')
-		, user__first_name=request.POST.get('firstName','non'))
-	return HttpResponse(etu.user.id)
+	firstName = request.POST.get('firstName','none')
+	lastName = request.POST.get('lastName','none')
+	print firstName
+	print lastName
+	print "AVANT"
+	etuList = Etudiant.objects.all().filter(user__last_name = lastName, user__first_name = firstName)
+	print "APRES"
+	print etuList.count()
+	result = "Aucun etudiant trouve"
+	for e in etuList:
+		result = e.user.username
+	return HttpResponse(result)
 
