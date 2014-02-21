@@ -113,7 +113,7 @@ def justification(request):
 		justi.save()
 		print "APRES"
 		
-	return HttpResponseRedirect('/')
+	return HttpResponse("OK")
   
 def log_in(request):
 	logout(request)
