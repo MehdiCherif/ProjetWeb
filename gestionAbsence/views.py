@@ -19,11 +19,11 @@ def accueil(request):
       
     if groupe == 'Enseignant':
       list_cours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=True)
-      return render(request, 'enseignant.html',{"titre":"Accueil de PolyAbs", 'list_cours':list_cours})
+      return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_cours':list_cours})
     elif groupe == 'Etudiant':
-      return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs"})
+      return render(request, 'etudiant.html',{"titre":"PolyAbs - Espace Etudiant"})
     elif groupe == 'Secretaire':
-      return render(request, 'secretaire.html',{"titre":"Accueil de PolyAbs"})
+      return render(request, 'secretaire.html',{"titre":"PolyAbs - Espace Secrétaire"})
     else:
       return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
   else :
@@ -31,7 +31,7 @@ def accueil(request):
 
 def cours(request, cours_id):
   cours = Cours.objects.get(pk=cours_id)
-  return render(request, 'enseignant_cours.html',{"titre":"Accueil de PolyAbs", 'cours':cours})
+  return render(request, 'enseignant_cours.html',{"titre":"PolyAbs - Gestion Absences", 'cours':cours})
 
 def searchEtu(request, nom):
   etuList = Etudiant.objects.all().filter(
@@ -104,16 +104,13 @@ def getAbsencesEtu(request, username):
 
 def justification(request):
 	if request.POST and request.user.groups.all()[0].name == "Secretaire":
-		print "AVANT"
 		idAbs = request.POST.get('idAbs', 'none')
 		abs = Absence.objects.get(pk=idAbs)
 		secr = Secretaire.objects.all().filter(user__username = request.user.username)[0]
 		descr = request.POST.get('justif', 'none')
 		justi = Justificatif(absence = abs, secretaire = secr, description = descr)
 		justi.save()
-		print "APRES"
-		
-	return HttpResponse("OK")
+	return HttpResponseRedirect("/")
   
 def log_in(request):
 	logout(request)
@@ -131,14 +128,16 @@ def log_out(request):
 	logout(request)
 	return HttpResponseRedirect('/')
 
+def contact(request):
+	return render(request, 'contact.html',{"titre":"PolyAbs - Contact"})
+	
+def aPropos(request):
+	return render(request, 'aPropos.html',{"titre":"PolyAbs - A Propos"})
+
 def getEtu(request):
 	firstName = request.POST.get('firstName','none')
 	lastName = request.POST.get('lastName','none')
-	print firstName
-	print lastName
-	print "AVANT"
 	etuList = Etudiant.objects.all().filter(user__last_name = lastName, user__first_name = firstName)
-	print "APRES"
 	print etuList.count()
 	result = "Aucun etudiant trouve"
 	for e in etuList:

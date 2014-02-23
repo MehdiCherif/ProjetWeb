@@ -14,4 +14,6 @@ urlpatterns = patterns('',
 	url(r'^genererAbsence', views.genererAbsence),
 	url(r'^getAbsencesEtu/(?P<username>\w+)', views.getAbsencesEtu),
 	url(r'^justification/', views.justification),
+	url(r'^contact/', views.contact),
+	url(r'^aPropos/', views.aPropos),
 )
