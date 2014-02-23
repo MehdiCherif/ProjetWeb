@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.exceptions import PermissionDenied
 from gestionAbsence.models import *
 from django.db.models import Q
 from datetime import datetime
@@ -113,7 +114,7 @@ def justification(request):
 		justi.save()
 		print "APRES"
 		
-	return HttpResponse("OK")
+	return HttpResponseRedirect('/')
   
 def log_in(request):
 	logout(request)
@@ -125,7 +126,8 @@ def log_in(request):
 		if user is not None:
 			if user.is_active:
 				login(request, user)
-	return HttpResponseRedirect('/')
+				return HttpResponseRedirect('/')
+	raise PermissionDenied 
 
 def log_out(request):
 	logout(request)

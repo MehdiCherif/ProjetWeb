@@ -16,21 +16,53 @@
 			  </div>
 			  <form action="/login/" method="POST">{% csrf_token %}
 			  <div class="modal-body">
-				<input type="text" class="form-control" placeholder="Identifiant" id="username123" name="username"/> <br/>
+				<div id='login_alert'>
+				</div>
+				<input type="text" class="form-control" placeholder="Identifiant" id="username" name="username"/> <br/>
 				<input type="password" class="form-control" placeholder="Mot de passe" id="password" name="password"/> 
 			  </div>
 			  <div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-				<button type="submit" class="btn btn-primary">Se Connecter</button>
+				<button type="button" class="btn btn-primary" id='submitCo'>Se Connecter</button>
 			  </div>
 			  </form>  
 			  </div>
 		  </div>
 		</div>	
-		{% endif %}
 		
 		<script>
-			$('#lienCo').on('click', function() {
-				$('#loginModal').modal('toggle');	
+			
+			function activeAlert() {	
+				document.getElementById('login_alert').innerHTML = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><strong>Indentifiants incorrect</strong>, votre Identifiant ou votre mot de passe est incorrecte.</div>';
+			}
+			
+			$(function(){
+			  $('#submitCo').click(function(){
+			      var username = $('#username').val();
+			      var password = $('#password').val();
+			      $.ajax({
+			         url: '/login/' , 
+			         type: 'POST',
+			         data: {
+							 		username: username, 
+									password: password, 
+									csrfmiddlewaretoken: '{{ csrf_token }}', 
+									},
+			         success: function(result){  
+									location.reload();   
+			         	},
+							 error: function(result){  
+			      			activeAlert();   							 
+			         	}
+			      });     
+			   });
 			});
+		
+			$('#lienCo').on('click', function() {
+				$('#loginModal').modal('toggle');
+			});
+			
+			
 		</script>
+		
+		{% endif %}
