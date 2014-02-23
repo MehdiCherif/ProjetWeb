@@ -50,20 +50,17 @@ def searchEtu(request, nom):
 def genererAbsence(request):
 	i = 1
 	if request.POST:
-		coursId = request.POST.get('cours', 'non')
-		etuId = request.POST.get('etudiant'+str(i), 'none')
+		coursId = request.POST.get('cours', 'none')
+		etuUsername = request.POST.get('etudiant'+str(i), 'none')
 		cours = Cours.objects.get(id=coursId)
 		cours.justifie = True
 		cours.save()
-		while (etuId != 'none'):
-			print etuId
-			etudiant = Etudiant.objects.get(id=etuId)
+		while (etuUsername != 'none'):
+			etudiant = Etudiant.objects.get(user__username=etuUsername)
 			a = Absence(cours=cours, etudiant=etudiant)
 			a.save()
-			print 'saved'
 			i = i+1
-			etuId = request.POST.get('etudiant'+str(i), 'none')
-			
+			etuUsername = request.POST.get('etudiant'+str(i), 'none')
 	return accueil(request) 
   
 def getAbsencesEtu(request, username):
