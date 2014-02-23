@@ -22,7 +22,7 @@ def accueil(request):
       list_cours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=True)
       return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_cours':list_cours})
     elif groupe == 'Etudiant':
-      return render(request, 'etudiant.html',{"titre":"PolyAbs - Espace Etudiant"})
+      return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs", 'liste_abs': getAbsencesEtu(request, request.user.username) })
     elif groupe == 'Secretaire':
       return render(request, 'secretaire.html',{"titre":"PolyAbs - Espace Secrétaire"})
     else:
@@ -71,7 +71,6 @@ def getAbsencesEtu(request, username):
 	page = ""
 	if len(groupe) > 0:
 		groupe = groupe[0].name
-	if groupe == "Etudiant":
 		absences = Absence.objects.all().filter(etudiant__user__username = username)
 		if (len(absences) > 0):
 			page += u"<tr><td><b>Date</b></td><td><b>Matière</b></td><td><b>Enseignant</b></td><td><b>Justification</b></td></tr>"
@@ -83,25 +82,18 @@ def getAbsencesEtu(request, username):
 			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
 			justif = Justificatif.objects.all().filter(absence = abs)
 			if (len(justif) > 0):
-				page += "<td><span class='glyphicon glyphicon-ok-sign'></span></td>"
+				if groupe == "Etudiant":
+					page += "<td><span class='glyphicon glyphicon-ok-sign' id='popabs"+str(abs.id)+"'></span></td>"
+					page += "<script>$('#popabs"+str(abs.id)+"').popover({trigger:'hover',content:'"+justif[0].description+"',placement:'auto'});</script>"
+				elif groupe == "Secretaire":
+					page += "<td><span class='glyphicon glyphicon-ok-sign'></span></td>"
 			else:
-				page += "<td><span class='glyphicon glyphicon-remove-sign'></span></td>"
-	elif groupe == "Secretaire":
-		absences = Absence.objects.all().filter(etudiant__user__username = username)
-		if (len(absences) > 0):
-			page += u"<tr><td><b>Date</b></td><td><b>Matière</b></td><td><b>Enseignant</b></td><td><b>Justification</b></td></tr>"
-		else:
-			page += u"<p class='lead'>Aucune absence à ce jour.</p>"
-		for abs in absences:
-			dateAbs = abs.cours.date
-			dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
-			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
-			justif = Justificatif.objects.all().filter(absence = abs)
-			if (len(justif) > 0):
-				page += "<td><span class='glyphicon glyphicon-ok-sign'></span></td>"
-			else:
-				page += "<td><a onclick='openJustif("+str(abs.id)+")'><button type='button' class='btn btn-block' id='openJustif'><span class='glyphicon glyphicon-pencil'></span></button></a></td>"
-	return HttpResponse(page)
+				if groupe == "Etudiant":
+					page += "<td><span class='glyphicon glyphicon-remove-sign'></span></td>"
+				elif groupe == "Secretaire":
+					page += "<td><a onclick='openJustif("+str(abs.id)+")'><button type='button' class='btn btn-block' id='openJustif'><span class='glyphicon glyphicon-pencil'></span></button></a></td>"
+	page += "<script>$('.btn').popover();</script>"
+	return page
 
 def justification(request):
 	if request.POST and request.user.groups.all()[0].name == "Secretaire":
