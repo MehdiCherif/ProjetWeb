@@ -16,4 +16,5 @@ urlpatterns = patterns('',
 	url(r'^justification/', views.justification),
 	url(r'^contact/', views.contact),
 	url(r'^aPropos/', views.aPropos),
+	url(r'^getJustif/(?P<username>\w+)', views.getJustif),
 )

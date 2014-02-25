@@ -63,6 +63,22 @@ def genererAbsence(request):
 			etuUsername = request.POST.get('etudiant'+str(i), 'none')
 	return accueil(request) 
   
+def getJustif(request, username):
+	if (request.user.groups.all()[0].name == 'Secretaire'):
+		justifs = ""
+		listJustifs = Justificatif.objects.all().filter(etudiant__user__username = username)
+		print len(listJustifs)
+		if len(listJustifs) > 0:
+			for justif in listJustifs:
+				justifs += "<tr><td>"+formats.date_format(justif.dateDebut, "DATETIME_FORMAT")
+				justifs += "</td><td>"+formats.date_format(justif.dateFin, "DATETIME_FORMAT")+"</td><td>"
+				justifs += justif.secretaire.user.last_name+"</td><td>"+justif.justification+"</td></tr>"	
+		else:
+			justifs = "Cet étudiant n'a pas de justificatifs enregistré"
+		return HttpResponse(justifs)
+	else:
+		raise PermissionDenied
+  
 def getAbsencesEtu(request, username):
 	groupe = request.user.groups.all()
 	page = ""
