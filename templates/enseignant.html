@@ -1,19 +1,86 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h3>Espace Enseignant</h3>
-  
-  <div>
-    <table style='text-align: left;' style="border: 10px;">
-    {% for cours in list_cours %}
-      <tr>
-        <td><a href='../cours/{{ cours.id }}'><button class='btn glyphicon glyphicon-book'></button></a></td>
-        <td>   </td>
-        <td> {{ cours.nom }} </td>
-        <td>   </td>
-        <td> {{ cours.date }} </td>
-      </tr>
-    {% endfor %}
-    </table>
-  </div>
+	<h1>Espace Enseignant</h1>
+  <br/>
+	
+	<ul class="nav nav-pills nav-tabs" style="display:inline-block;text-align:center;">
+		<li class="active"><a href="#newcours" data-toggle="tab">
+      <span class="badge pull-right">{{list_newcours|length}}</span>
+      Nouveau Cours </a>
+		</li>
+		<li>
+			<a href="#oldcours" data-toggle="tab">Anciens Cours</a>
+		</li>
+		<li>
+			<a href="#notifications" data-toggle="tab">
+      <span class="badge pull-right">42</span>
+      Notifications </a>
+		</li>
+		<li>
+			<a href="#searchetu" data-toggle="tab">Étudiants</a>
+		</li>
+	</ul>
+	
+	<br/><br/>
+	
+	<!-- Tab panes -->
+	<div class="tab-content">
+	
+	  <div class="tab-pane fade in active" id="newcours">
+			<table class="table table-striped" style='text-align: left;'>
+	    {% for cours in list_newcours %}
+	      <tr class='clickableRow' href='../cours/{{ cours.id }}' style="cursor: pointer;">
+	        <td><a class='btn glyphicon glyphicon-book'/></td>
+	        <td> {{ cours.nom }} </td>
+	        <td> {{ cours.date }} </td>
+	      </tr>
+	    {% endfor %}
+    	</table>
+		</div>
+		
+	  <div class="tab-pane fade" id="oldcours">
+			<br/>
+			<table class="table table-striped" style='text-align: left;'>
+	    {% for cours in list_oldcours %}
+	      <tr class='clickableRow' href='../cours/{{ cours.id }}' style="cursor: pointer;">
+	        <td><span class='btn glyphicon glyphicon-book'/></td>
+	        <td>   </td>
+	        <td> {{ cours.nom }} </td>
+	        <td>   </td>
+	        <td> {{ cours.date }} </td>
+	      </tr>
+	    {% endfor %}
+    	</table>
+		</div>
+		
+	  <div class="tab-pane fade" id="notifications">...</div>
+		
+		<div class="tab-pane fade" id="searchetu">
+			{% include "rechercheEtu.html" %}
+			<div id="subtitle"></div>
+			<div id="absences"></div>
+		</div>
+		
+	</div>
+	
+	<script>		
+		$(".clickableRow").click(function() {
+            window.document.location = $(this).attr("href");
+    });
+		
+		function addEtu(nom, prenom ,username)
+    {
+		  $.get("../getAbsencesEtu/"+username, function(data)
+			{
+				$("#searchInput").val("");
+				$('#suggestion').html("");
+				$('#absences').html("<table id='absenceTable' class='table table-striped'>"+data+"</table>");
+				var nb_lignes = data.split("glyphicon-remove-sign").length;
+				$('#subtitle').html("<br/><h4><em>Absences de "+prenom+" "+nom+" ("+nb_lignes+" absences non justifiée):</em></h4><br/>");
+			});
+  	}
+	
+	</script>
+	
 {% endblock %}  

@@ -1,16 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h3>Espace Enseignant - {{ cours.nom }} ({{ cours.date }})</h3>
-  
+	<h1>Espace Enseignant</h1>
+  <h3 style="float: left;"><a href="../"><span class="glyphicon glyphicon-chevron-left"/></a><h3>
+	<h3><em>{{ cours.nom }} ({{ cours.date }})</em></h3>
   <br/>
   
   {% include "rechercheEtu.html" %}
   
 	<br/><br/>
 	  <form action='/genererAbsence' method='POST'>{% csrf_token %}<h4 id='titreListe'></h4>
+		
+		{% if cours.renseigne %}
+		<table id='list_absetu' class='table table-striped' style='text-align: left;'>
+			{% for abs in list_absetu %}
+				<tr>
+					<td>{{ abs.etudiant.user.first_name }}</td>
+					<td>{{ abs.etudiant.user.last_name }}</td>
+					<td>blabla</td>
+				</tr>
+			{% endfor %}
+		</table>	
+		{% endif %}
+		
 		<input type='hidden' name='cours' value='{{ cours.id }}'/>
-		<table id='list_etu' style='text-align: left;'></table>
+		<table id='list_etu' class='table table-striped' style='text-align: left;'></table>
 		<div id='submit_button'></div>
 	</form>
   
@@ -20,7 +34,7 @@
   
     function addEtu(nom, prenom ,username)
     {
-	  nb_etu++;
+	  	nb_etu++;
       document.getElementById('suggestion').innerHTML = '';
       searchInput = document.getElementById('searchInput').value = '';
       if(listActivated == 0)
@@ -31,16 +45,24 @@
 				document.getElementById('submit_button').innerHTML = 
 					"<button class='btn btn-primary' type='submit'>Valider</button>";
       }
-	 liste_etu = document.getElementById('list_etu').innerHTML;
+		 liste_etu = document.getElementById('list_etu').innerHTML;
       document.getElementById('list_etu').innerHTML =   liste_etu 
-	  	+ "<tr id="+username+"><td>"+prenom+"</td><td>   </td><td>"+nom+"</td>"
-          + "<td><input type='hidden' name='etudiant"+nb_etu+"' value='"+username+"'></td><td>   </td>"
-          + "<td><button class='glyphicon glyphicon-remove btn' onclick='removeEtu("+username+")'/></td>";
+	  	+ "<tr id="+username+"><td>"+prenom+"</td><td>"+nom+"</td>"
+	    + "<td><a href='javascript:removeEtu(\""+username+"\");'><span  class='glyphicon glyphicon-remove' ></span></a></td></tr><input type='hidden' name='etudiant"+nb_etu+"' value='"+username+"'>";
   	}
 
     
-    function removeEtu(username)
-    {
+    function removeEtu(username) {
+      element = $(username);
+      document.getElementById('list_etu').deleteRow(element.rowIndex);
+    }
+		
+		function activeEtu(username) {
+      element = document.getElementById(username);
+      document.getElementById('list_etu').deleteRow(element.rowIndex);
+    }
+		
+		function disableEtu(username) {
       element = document.getElementById(username);
       document.getElementById('list_etu').deleteRow(element.rowIndex);
     }
