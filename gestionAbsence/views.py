@@ -21,7 +21,8 @@ def accueil(request):
 		if groupe == 'Enseignant':
 			list_newcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(renseigne=True)
 			list_oldcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(renseigne=False)
-			return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_newcours':list_newcours, 'list_oldcours':list_oldcours})
+			list_notif = Notification.objects.all().filter(enseignant__user=request.user).exclude(vu=True)
+			return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_newcours':list_newcours, 'list_oldcours':list_oldcours, 'list_notif':list_notif})
 		elif groupe == 'Etudiant':
 			return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs", 'liste_abs': getAbsencesEtu(request, request.user.username) })
 		elif groupe == 'Secretaire':
@@ -61,7 +62,6 @@ def genererAbsence(request):
 		cours.renseigne = True
 		cours.save()
 		while (etuUsername != 'none'):
-			print 'azerty'
 			etudiant = Etudiant.objects.get(user__username=etuUsername)
 			a = Absence(cours=cours, etudiant=etudiant)
 			a.save()
@@ -69,25 +69,21 @@ def genererAbsence(request):
 			nbAbsNonJustifie = 0
 			absEtu = Absence.objects.all().filter(etudiant = etudiant)
 			for abs in absEtu:
-				justif = Justificatif.objects.all()
-					.filter(dateDebut__lte = abs.date
-					, dateFin__gte = abs.date)
+				justif = Justificatif.objects.all().filter(etudiant = etudiant, dateDebut__lte = abs.cours.date, dateFin__gte = abs.cours.date)
 				if(len(justif) == 0) :
-					nbAbsNonJustifie++
+					nbAbsNonJustifie = nbAbsNonJustifie + 1  
 			if nbAbsNonJustifie >= 3:
-				notification = Notification(
-					enseignant = etudiant.annee.respo, 
-					contenu = etudiant.user.first_name + etudiant.user.last_name + "a été absent 3 fois", 
-					vue = False)
+				notification = Notification(enseignant = etudiant.annee.respo, vu = False)
+				notification.save()
+				notification.contenu = u"<a href='javascript:clickNotif(\"" +etudiant.user.last_name+ u"\",\"" +etudiant.user.first_name+ u"\",\"" +etudiant.user.username+ u"\",\""+ str(notification.id)+ "\")'>" +etudiant.user.first_name+ " " + etudiant.user.last_name+ u"</a> a été absent plus de 3 fois"
 				notification.save()
 			if nbAbsNonJustifie >= 5:
-				notification = Notification(
-					enseignant = etudiant.annee.dpt.respo, 
-					contenu = etudiant.user.first_name + etudiant.user.last_name + "a été absent 5 fois", 
-					vue = False)
+				notification = Notification(enseignant = etudiant.annee.respo, vu = False)
+				notification.save()
+				notification.contenu = u"<a href='javascript:clickNotif(\""+etudiant.user.last_name+u"\",\""+etudiant.user.first_name+u"\",\""+etudiant.user.username+u"\",\""+str(notification.id)+u"\")'>"+etudiant.user.first_name + " "+etudiant.user.last_name+ u"</a> a été absent plus de 5 fois"
 				notification.save()
 			etuUsername = request.POST.get('etudiant'+str(i), 'none')
-	return accueil(request) 
+	return HttpResponseRedirect('/') 
   
 def getJustif(request, username):
 	if (request.user.groups.all()[0].name == 'Secretaire'):
@@ -119,15 +115,7 @@ def getAbsencesEtu(request, username):
 			dateAbs = abs.cours.date
 			dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
 			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
-<<<<<<< HEAD
 			justif = Justificatif.objects.all().filter(etudiant__user__username = username, dateDebut__lte=abs.cours.date, dateFin__gte=abs.cours.date)
-=======
-			#
-			#
-			# Filter mauvais
-			#
-			justif = Justificatif.objects.all().filter()
->>>>>>> Ancien cours + debut notif
 			if (len(justif) > 0):
 				if groupe == "Etudiant" or groupe == "Enseignant":
 					page += "<td><span class='glyphicon glyphicon-ok-sign' id='popabs"+str(abs.id)+"'></span></td>"
@@ -140,6 +128,9 @@ def getAbsencesEtu(request, username):
 				elif groupe == "Secretaire":
 					page += "<td><a onclick='openJustif("+str(abs.id)+")'><button type='button' class='btn btn-block' id='openJustif'><span class='glyphicon glyphicon-pencil'></span></button></a></td>"
 	page += "<script>$('.btn').popover();</script>"
+	
+	if groupe == "Etudiant":
+		return page
 	return HttpResponse(page)
 
 def justification(request):
@@ -186,3 +177,9 @@ def getEtu(request):
 	for e in etuList:
 		result = e.user.username
 	return HttpResponse(result)
+	
+def viewNotif(request, notifId):
+	notif = Notification.objects.get(id = notifId)
+	notif.vu = True
+	notif.save()
+	return ''

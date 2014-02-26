@@ -17,4 +17,5 @@ urlpatterns = patterns('',
 	url(r'^contact/', views.contact),
 	url(r'^aPropos/', views.aPropos),
 	url(r'^getJustif/(?P<username>\w+)', views.getJustif),
+	url(r'^viewNotif/(?P<notifId>\d+)', views.viewNotif),
 )
