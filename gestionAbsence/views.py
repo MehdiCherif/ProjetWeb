@@ -19,7 +19,7 @@ def accueil(request):
       groupe = 'undefined'
       
     if groupe == 'Enseignant':
-      list_cours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=True)
+      list_cours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(renseigne=True)
       return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_cours':list_cours})
     elif groupe == 'Etudiant':
       return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs", 'liste_abs': getAbsencesEtu(request, request.user.username) })
@@ -53,7 +53,7 @@ def genererAbsence(request):
 		coursId = request.POST.get('cours', 'none')
 		etuUsername = request.POST.get('etudiant'+str(i), 'none')
 		cours = Cours.objects.get(id=coursId)
-		cours.justifie = True
+		cours.renseigne = True
 		cours.save()
 		while (etuUsername != 'none'):
 			etudiant = Etudiant.objects.get(user__username=etuUsername)
@@ -93,11 +93,11 @@ def getAbsencesEtu(request, username):
 			dateAbs = abs.cours.date
 			dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
 			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
-			justif = Justificatif.objects.all().filter(absence = abs)
+			justif = Justificatif.objects.all().filter(etudiant__user__username = username, dateDebut__lte=abs.cours.date, dateFin__gte=abs.cours.date)
 			if (len(justif) > 0):
 				if groupe == "Etudiant":
 					page += "<td><span class='glyphicon glyphicon-ok-sign' id='popabs"+str(abs.id)+"'></span></td>"
-					page += "<script>$('#popabs"+str(abs.id)+"').popover({trigger:'hover',content:'"+justif[0].description+"',placement:'auto'});</script>"
+					page += "<script>$('#popabs"+str(abs.id)+"').popover({trigger:'hover',content:'"+justif[0].justification+"',placement:'auto'});</script>"
 				elif groupe == "Secretaire":
 					page += "<td><span class='glyphicon glyphicon-ok-sign'></span></td>"
 			else:
@@ -110,11 +110,13 @@ def getAbsencesEtu(request, username):
 
 def justification(request):
 	if request.POST and request.user.groups.all()[0].name == "Secretaire":
-		idAbs = request.POST.get('idAbs', 'none')
-		abs = Absence.objects.get(pk=idAbs)
+		etud = Etudiant.objects.all().filter(user__username = request.POST.get('etudiant', 'none'))[0]
+		dateD = request.POST.get('dateDebut', 'none')
+		dateF = request.POST.get('dateFin', 'none')
+		justif = request.POST.get('justif', 'none')
 		secr = Secretaire.objects.all().filter(user__username = request.user.username)[0]
 		descr = request.POST.get('justif', 'none')
-		justi = Justificatif(absence = abs, secretaire = secr, description = descr)
+		justi = Justificatif(etudiant = etud, dateDebut = dateD, dateFin = dateF, secretaire = secr, justification = justif)
 		justi.save()
 	return HttpResponseRedirect('/')
   

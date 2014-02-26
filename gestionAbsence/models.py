@@ -48,6 +48,7 @@ class Absence(models.Model):
 class Notification(models.Model):
 	enseignant = models.ForeignKey(Enseignant)
 	contenu = models.CharField(max_length=1000)
+	vu = models.BooleanField()
 	def __unicode__(self):
 		return u'%s %s' % (self.enseignant.user.last_name,self.contenu)
 		
@@ -58,4 +59,4 @@ class Justificatif(models.Model):
 	secretaire = models.ForeignKey(Secretaire)
 	justification = models.CharField(max_length=1000)
 	def __unicode__(self):
-		return u'(%s-%s) : %s - %s' % (self.dateDebut, self.dateFin, self.secretaire.user.last_name, self.justification)
+		return u'%s - (%s-%s) : %s - %s' % (self.etudiant.user.last_name, self.dateDebut, self.dateFin, self.secretaire.user.last_name, self.justification)
