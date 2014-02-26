@@ -11,28 +11,30 @@ from django.utils import formats
 # Create your views here.
 
 def accueil(request):
-  if request.user.is_authenticated():
-    groupe = request.user.groups.all()
-    if len(groupe) > 0:
-      groupe = groupe[0].name
-    else:
-      groupe = 'undefined'
-      
-    if groupe == 'Enseignant':
-      list_cours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(renseigne=True)
-      return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_cours':list_cours})
-    elif groupe == 'Etudiant':
-      return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs", 'liste_abs': getAbsencesEtu(request, request.user.username) })
-    elif groupe == 'Secretaire':
-      return render(request, 'secretaire.html',{"titre":"PolyAbs - Espace Secrétaire"})
-    else:
-      return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
-  else :
-    return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
+	if request.user.is_authenticated():
+		groupe = request.user.groups.all()
+		if len(groupe) > 0:
+			groupe = groupe[0].name
+		else:
+			groupe = 'undefined'
+
+		if groupe == 'Enseignant':
+			list_newcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=True)
+			list_oldcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=False)
+			return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_newcours':list_newcours, 'list_oldcours':list_oldcours})
+		elif groupe == 'Etudiant':
+			return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs", 'liste_abs': getAbsencesEtu(request, request.user.username) })
+		elif groupe == 'Secretaire':
+			return render(request, 'secretaire.html',{"titre":"PolyAbs - Espace Secrétaire"})
+		else:
+			return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
+	else :
+		return render(request, 'base.html',{"titre":"Accueil de PolyAbs"})
 
 def cours(request, cours_id):
-  cours = Cours.objects.get(pk=cours_id)
-  return render(request, 'enseignant_cours.html',{"titre":"PolyAbs - Gestion Absences", 'cours':cours})
+	cours = Cours.objects.get(pk=cours_id)
+	list_absences = Absence.objects.all().filter(cours = cours)
+	return render(request, 'enseignant_cours.html',{"titre":"PolyAbs - Gestion Absences", 'cours':cours, 'list_absences':list_absences})
 
 def searchEtu(request, nom):
   etuList = Etudiant.objects.all().filter(
@@ -95,18 +97,18 @@ def getAbsencesEtu(request, username):
 			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
 			justif = Justificatif.objects.all().filter(etudiant__user__username = username, dateDebut__lte=abs.cours.date, dateFin__gte=abs.cours.date)
 			if (len(justif) > 0):
-				if groupe == "Etudiant":
+				if groupe == "Etudiant" or groupe == "Enseignant":
 					page += "<td><span class='glyphicon glyphicon-ok-sign' id='popabs"+str(abs.id)+"'></span></td>"
 					page += "<script>$('#popabs"+str(abs.id)+"').popover({trigger:'hover',content:'"+justif[0].justification+"',placement:'auto'});</script>"
 				elif groupe == "Secretaire":
 					page += "<td><span class='glyphicon glyphicon-ok-sign'></span></td>"
 			else:
-				if groupe == "Etudiant":
+				if groupe == "Etudiant" or groupe == "Enseignant":
 					page += "<td><span class='glyphicon glyphicon-remove-sign'></span></td>"
 				elif groupe == "Secretaire":
 					page += "<td><a onclick='openJustif("+str(abs.id)+")'><button type='button' class='btn btn-block' id='openJustif'><span class='glyphicon glyphicon-pencil'></span></button></a></td>"
 	page += "<script>$('.btn').popover();</script>"
-	return page
+	return HttpResponse(page)
 
 def justification(request):
 	if request.POST and request.user.groups.all()[0].name == "Secretaire":
