@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+	
 	<h1>Espace Enseignant</h1>
   <h3 style="float: left;"><a href="../"><span class="glyphicon glyphicon-chevron-left"/></a><h3>
 	<h3><em>{{ cours.nom }} ({{ cours.date }})</em></h3>
@@ -13,13 +14,6 @@
 		
 		{% if cours.renseigne %}
 		<table id='list_absetu' class='table table-striped' style='text-align: left;'>
-			{% for abs in list_absetu %}
-				<tr>
-					<td>{{ abs.etudiant.user.first_name }}</td>
-					<td>{{ abs.etudiant.user.last_name }}</td>
-					<td>blabla</td>
-				</tr>
-			{% endfor %}
 		</table>	
 		{% endif %}
 		
@@ -29,8 +23,9 @@
 	</form>
   
   <script>
-    listActivated = 0;
-    nb_etu = 0;
+	
+  	listActivated = 0;
+  	nb_etu = 0;
   
     function addEtu(nom, prenom ,username)
     {
@@ -41,14 +36,14 @@
       {
         listActivated = 1;				
         document.getElementById('titreListe').innerHTML = 
-          "<em>Liste des étudiants absents - </em>";
+          "<em>Liste des étudiants absents</em>";
 				document.getElementById('submit_button').innerHTML = 
 					"<button class='btn btn-primary' type='submit'>Valider</button>";
       }
 		 liste_etu = document.getElementById('list_etu').innerHTML;
       document.getElementById('list_etu').innerHTML =   liste_etu 
 	  	+ "<tr id="+username+"><td>"+prenom+"</td><td>"+nom+"</td>"
-	    + "<td><a href='javascript:removeEtu(\""+username+"\");'><span  class='glyphicon glyphicon-remove' ></span></a></td></tr><input type='hidden' name='etudiant"+nb_etu+"' value='"+username+"'>";
+	    + "<td><input type='hidden' name='etudiant"+nb_etu+"' value='"+username+"'></td><td><a href='javascript:removeEtu(\""+username+"\");'><span  class='glyphicon glyphicon-remove' ></span></a></td></tr>";
   	}
 
     
@@ -57,17 +52,50 @@
       document.getElementById('list_etu').deleteRow(element.rowIndex);
     }
 		
+		function addAbsEtu(nom, prenom ,username) {
+			nb_etu++;
+			liste_absetu = document.getElementById('list_absetu').innerHTML;
+      document.getElementById('list_absetu').innerHTML =   liste_absetu 
+	  	+ "<tr id="+username+"><td>"+prenom+"</td><td>"+nom+"</td><td><input type='hidden' name='etudiant"+nb_etu+"' value='"+username+"'></td><td><a href='javascript:disableEtu(\""+username+"\");'><span class='glyphicon glyphicon-log-out' data-toggle='tooltip' data-placement='right' title='Annuler cette absence'></span></a></td></tr>";
+		}
+		
 		function activeEtu(username) {
-      element = document.getElementById(username);
-      document.getElementById('list_etu').deleteRow(element.rowIndex);
+			nb_etu++;
+     	element = document.getElementById(username);
+			element.deleteCell(2);
+			element.insertCell(2).innerHTML = "<input type='hidden' name='etudiant"+nb_etu+"' value='"+username+"'>";
+			element.deleteCell(3);
+			element.insertCell(3).innerHTML = "<a href='javascript:disableEtu(\""+username+"\");'><span class='glyphicon glyphicon-log-out' data-toggle='tooltip' data-placement='right' title='Reactiver cette absence'></span></a>";
+			$('.glyphicon').tooltip();
     }
 		
 		function disableEtu(username) {
+			if(listActivated == 0)
+      {
+        listActivated = 1;				
+        document.getElementById('titreListe').innerHTML = 
+          "<em>Liste des étudiants absents</em>";
+				document.getElementById('submit_button').innerHTML = 
+					"<button class='btn btn-primary' type='submit'>Valider</button>";
+      }
+			nb_etu--;
       element = document.getElementById(username);
-      document.getElementById('list_etu').deleteRow(element.rowIndex);
+			element.deleteCell(2);
+			element.insertCell(2).innerHTML = "";
+			element.deleteCell(3);
+			element.insertCell(3).innerHTML = "<a href='javascript:activeEtu(\""+username+"\");'><span class='glyphicon glyphicon-log-in' data-toggle='tooltip' data-placement='right' title='Reactiver cette absence'></span></a>";	
+			$('.glyphicon').tooltip();
     }
     
-    
+		window.onload = function() {
+		{% for abs in list_absences %}
+			addAbsEtu(
+				'{{abs.etudiant.user.last_name}}',
+				'{{abs.etudiant.user.first_name}}',
+				'{{abs.etudiant.user.username}}');	
+		{% endfor %}
+			$('.glyphicon').tooltip();
+		}
     
   </script>
 {% endblock %}

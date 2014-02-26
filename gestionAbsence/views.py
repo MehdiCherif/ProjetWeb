@@ -19,8 +19,8 @@ def accueil(request):
 			groupe = 'undefined'
 
 		if groupe == 'Enseignant':
-			list_newcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=True)
-			list_oldcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(justifie=False)
+			list_newcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(renseigne=True)
+			list_oldcours = Cours.objects.all().filter(enseignant__user=request.user, date__lte=datetime.now()).exclude(renseigne=False)
 			return render(request, 'enseignant.html',{"titre":"PolyAbs - Espace Enseignant", 'list_newcours':list_newcours, 'list_oldcours':list_oldcours})
 		elif groupe == 'Etudiant':
 			return render(request, 'etudiant.html',{"titre":"Accueil de PolyAbs", 'liste_abs': getAbsencesEtu(request, request.user.username) })
@@ -53,15 +53,39 @@ def genererAbsence(request):
 	i = 1
 	if request.POST:
 		coursId = request.POST.get('cours', 'none')
-		etuUsername = request.POST.get('etudiant'+str(i), 'none')
 		cours = Cours.objects.get(id=coursId)
+		absences = Absence.objects.all().filter(cours = cours)
+		for a in absences:
+			a.delete()
+		etuUsername = request.POST.get('etudiant'+str(i), 'none')
 		cours.renseigne = True
 		cours.save()
 		while (etuUsername != 'none'):
+			print 'azerty'
 			etudiant = Etudiant.objects.get(user__username=etuUsername)
 			a = Absence(cours=cours, etudiant=etudiant)
 			a.save()
 			i = i+1
+			nbAbsNonJustifie = 0
+			absEtu = Absence.objects.all().filter(etudiant = etudiant)
+			for abs in absEtu:
+				justif = Justificatif.objects.all()
+					.filter(dateDebut__lte = abs.date
+					, dateFin__gte = abs.date)
+				if(len(justif) == 0) :
+					nbAbsNonJustifie++
+			if nbAbsNonJustifie >= 3:
+				notification = Notification(
+					enseignant = etudiant.annee.respo, 
+					contenu = etudiant.user.first_name + etudiant.user.last_name + "a été absent 3 fois", 
+					vue = False)
+				notification.save()
+			if nbAbsNonJustifie >= 5:
+				notification = Notification(
+					enseignant = etudiant.annee.dpt.respo, 
+					contenu = etudiant.user.first_name + etudiant.user.last_name + "a été absent 5 fois", 
+					vue = False)
+				notification.save()
 			etuUsername = request.POST.get('etudiant'+str(i), 'none')
 	return accueil(request) 
   
@@ -95,7 +119,15 @@ def getAbsencesEtu(request, username):
 			dateAbs = abs.cours.date
 			dateAbs2 = formats.date_format(dateAbs, "DATETIME_FORMAT")
 			page += "<tr><td>"+dateAbs2+"</td><td>"+abs.cours.nom+"</td><td>"+abs.cours.enseignant.user.last_name+"</td>"
+<<<<<<< HEAD
 			justif = Justificatif.objects.all().filter(etudiant__user__username = username, dateDebut__lte=abs.cours.date, dateFin__gte=abs.cours.date)
+=======
+			#
+			#
+			# Filter mauvais
+			#
+			justif = Justificatif.objects.all().filter()
+>>>>>>> Ancien cours + debut notif
 			if (len(justif) > 0):
 				if groupe == "Etudiant" or groupe == "Enseignant":
 					page += "<td><span class='glyphicon glyphicon-ok-sign' id='popabs"+str(abs.id)+"'></span></td>"
